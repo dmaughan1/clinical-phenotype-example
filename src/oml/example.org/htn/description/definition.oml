@@ -1,0 +1,95 @@
+@dc:title "Essential hypertension phenotype definition"
+@dc:description "Intent + computable criteria. Antihypertensive-therapy intent has no criterion; the secondary-HTN exclusion depends on an unmapped concept."
+description <http://example.org/htn/description/definition#> as definition {
+    uses <http://purl.org/dc/elements/1.1/> as dc
+    uses <http://www.w3.org/2000/01/rdf-schema#> as rdfs
+    uses <http://www.example.com/phenotype/vocabulary#> as phenotype
+    extends <http://example.org/htn/description/terminology#> as terminology
+
+    // --- intent ---
+
+    @rdfs:label "Intent: recorded hypertension diagnosis"
+    instance IntentHtnDx : phenotype:IntendedCriterion [
+        phenotype:id "INT-HTN-DX"
+        phenotype:intentText "Patient has a recorded clinical diagnosis of essential hypertension."
+    ]
+
+    @rdfs:label "Intent: repeated elevated blood pressure"
+    instance IntentElevatedBp : phenotype:IntendedCriterion [
+        phenotype:id "INT-HTN-BP"
+        phenotype:intentText "Patient has repeated elevated systolic blood-pressure measurements."
+    ]
+
+    @rdfs:label "Intent: exclude secondary hypertension"
+    instance IntentExcludeSecondary : phenotype:IntendedCriterion [
+        phenotype:id "INT-HTN-SEC"
+        phenotype:intentText "Exclude patients whose hypertension is secondary to another condition."
+    ]
+
+    // no computable criterion implements this -> dropped
+    @rdfs:label "Intent: on antihypertensive therapy"
+    instance IntentOnTherapy : phenotype:IntendedCriterion [
+        phenotype:id "INT-HTN-RX"
+        phenotype:intentText "Patient is currently on antihypertensive drug therapy."
+    ]
+
+    // --- computable criteria ---
+
+    @rdfs:label "Recorded essential hypertension code"
+    instance HtnDxCoded : phenotype:InclusionCriterion [
+        phenotype:id "CMP-HTN-DX"
+        phenotype:logicExpression "exists Condition.code subsumedBy 59621000"
+        phenotype:implements IntentHtnDx
+        phenotype:dependsOnConcept terminology:EssentialHypertension
+    ]
+
+    @rdfs:label "Systolic BP >= 140 on at least two occasions"
+    instance ElevatedSystolic : phenotype:InclusionCriterion [
+        phenotype:id "CMP-HTN-BP"
+        phenotype:logicExpression "count(Observation(SystolicBP).value >= 140) >= 2"
+        phenotype:threshold 140.0
+        phenotype:implements IntentElevatedBp
+        phenotype:dependsOnConcept terminology:SystolicBloodPressure
+    ]
+
+    @rdfs:label "Diastolic BP >= 90 on at least two occasions"
+    instance ElevatedDiastolic : phenotype:InclusionCriterion [
+        phenotype:id "CMP-HTN-DBP"
+        phenotype:logicExpression "count(Observation(DiastolicBP).value >= 90) >= 2"
+        phenotype:threshold 90.0
+        phenotype:implements IntentElevatedBp
+        phenotype:dependsOnConcept terminology:DiastolicBloodPressure
+    ]
+
+    // satisfied when the patient MEETS the excluding condition (secondary hypertension)
+    @rdfs:label "Has secondary hypertension code"
+    instance SecondaryHtnExcl : phenotype:ExclusionCriterion [
+        phenotype:id "CMP-HTN-SEC"
+        phenotype:logicExpression "exists Condition.code subsumedBy 31992008"
+        phenotype:implements IntentExcludeSecondary
+        phenotype:dependsOnConcept terminology:SecondaryHypertension
+    ]
+
+    // --- phenotype + cohort ---
+
+    // comprises intent too, so dropped intent stays attached to the phenotype
+    @rdfs:label "Essential Hypertension Phenotype"
+    @dc:description "Adults with essential (primary) hypertension, for a registry cohort."
+    instance HypertensionPhenotype : phenotype:Phenotype [
+        phenotype:id "PH-HTN"
+        phenotype:comprises IntentHtnDx
+        phenotype:comprises IntentElevatedBp
+        phenotype:comprises IntentExcludeSecondary
+        phenotype:comprises IntentOnTherapy
+        phenotype:comprises HtnDxCoded
+        phenotype:comprises ElevatedSystolic
+        phenotype:comprises ElevatedDiastolic
+        phenotype:comprises SecondaryHtnExcl
+        phenotype:yields HypertensionCohort
+    ]
+
+    @rdfs:label "Essential Hypertension Cohort"
+    instance HypertensionCohort : phenotype:Cohort [
+        phenotype:id "CO-HTN"
+    ]
+}

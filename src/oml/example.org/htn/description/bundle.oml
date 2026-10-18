@@ -1,0 +1,10 @@
+@dc:title "Hypertension description bundle"
+@dc:description "Pulls in the installed vocabulary bundle + all local descriptions so reasoning and codegen see everything at once."
+description bundle <http://example.org/htn/description/bundle#> as d-bundle {
+    uses <http://purl.org/dc/elements/1.1/> as dc
+    uses <http://www.example.com/phenotype/vocabulary-bundle#>
+    includes <http://example.org/htn/description/data#>
+    includes <http://example.org/htn/description/terminology#>
+    includes <http://example.org/htn/description/definition#>
+    includes <http://example.org/htn/description/cohort#>
+}

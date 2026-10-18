@@ -1,0 +1,33 @@
+@dc:title "Datasets and data elements (hypertension example)"
+@dc:description "Primary-care EHR has coded conditions + BP observations; the claims feed has codes only."
+description <http://example.org/htn/description/data#> as data {
+    uses <http://purl.org/dc/elements/1.1/> as dc
+    uses <http://www.w3.org/2000/01/rdf-schema#> as rdfs
+    uses <http://www.example.com/phenotype/vocabulary#> as phenotype
+
+    @rdfs:label "Primary Care EHR"
+    @dc:description "Full EHR: coded conditions and vital-sign observations."
+    instance PrimaryCareEhr : phenotype:Dataset [
+        phenotype:id "DS-PCEHR"
+    ]
+
+    @rdfs:label "Claims Feed"
+    @dc:description "Administrative claims: diagnosis codes only, no vitals."
+    instance ClaimsFeed : phenotype:Dataset [
+        phenotype:id "DS-CLAIMS"
+    ]
+
+    @rdfs:label "Condition.code"
+    instance ConditionCode : phenotype:DataElement [
+        phenotype:id "DE-CONDCODE"
+        phenotype:availableIn PrimaryCareEhr
+        phenotype:availableIn ClaimsFeed
+    ]
+
+    // vital sign: primary-care EHR only
+    @rdfs:label "Observation.bloodPressure"
+    instance BpObservation : phenotype:DataElement [
+        phenotype:id "DE-BPOBS"
+        phenotype:availableIn PrimaryCareEhr
+    ]
+}

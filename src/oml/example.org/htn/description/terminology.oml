@@ -1,0 +1,60 @@
+@dc:title "Terminology concepts (hypertension example)"
+@dc:description "SNOMED/LOINC concepts and their data mappings. Secondary hypertension is left unmapped."
+description <http://example.org/htn/description/terminology#> as terminology {
+    uses <http://purl.org/dc/elements/1.1/> as dc
+    uses <http://www.w3.org/2000/01/rdf-schema#> as rdfs
+    uses <http://www.example.com/phenotype/vocabulary#> as phenotype
+    extends <http://example.org/htn/description/data#> as data
+
+    @rdfs:label "Hypertensive disorder (disorder)"
+    instance HypertensiveDisorder : phenotype:ClinicalConcept [
+        phenotype:id "CON-HTN-DIS"
+        phenotype:conceptCode "38341003"
+        phenotype:sourceSystem "SNOMED CT"
+        phenotype:sourceVersion "2024-09"
+        phenotype:mappingStatus "Broader"
+        phenotype:mappedTo data:ConditionCode
+        phenotype:subsumes EssentialHypertension
+        phenotype:subsumes SecondaryHypertension
+    ]
+
+    @rdfs:label "Essential hypertension (disorder)"
+    instance EssentialHypertension : phenotype:ClinicalConcept [
+        phenotype:id "CON-HTN-ESS"
+        phenotype:conceptCode "59621000"
+        phenotype:sourceSystem "SNOMED CT"
+        phenotype:sourceVersion "2024-09"
+        phenotype:mappingStatus "Exact"
+        phenotype:mappedTo data:ConditionCode
+    ]
+
+    @rdfs:label "Systolic blood pressure"
+    instance SystolicBloodPressure : phenotype:ClinicalConcept [
+        phenotype:id "CON-SBP"
+        phenotype:conceptCode "8480-6"
+        phenotype:sourceSystem "LOINC"
+        phenotype:sourceVersion "2.76"
+        phenotype:mappingStatus "Exact"
+        phenotype:mappedTo data:BpObservation
+    ]
+
+    @rdfs:label "Diastolic blood pressure"
+    instance DiastolicBloodPressure : phenotype:ClinicalConcept [
+        phenotype:id "CON-DBP"
+        phenotype:conceptCode "8462-4"
+        phenotype:sourceSystem "LOINC"
+        phenotype:sourceVersion "2.76"
+        phenotype:mappingStatus "Exact"
+        phenotype:mappedTo data:BpObservation
+    ]
+
+    // no mappedTo -> unmapped; the exclusion criterion that depends on it is not evaluable
+    @rdfs:label "Secondary hypertension (disorder)"
+    instance SecondaryHypertension : phenotype:ClinicalConcept [
+        phenotype:id "CON-HTN-SEC"
+        phenotype:conceptCode "31992008"
+        phenotype:sourceSystem "SNOMED CT"
+        phenotype:sourceVersion "2024-09"
+        phenotype:mappingStatus "Unmapped"
+    ]
+}

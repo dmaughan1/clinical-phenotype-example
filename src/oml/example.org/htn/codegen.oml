@@ -1,0 +1,15 @@
+description <http://example.org/htn/codegen#> as codegenConfigs {
+
+	uses <http://opencaesar.io/codegen#> as codegen
+
+	// Binds the INSTALLED phenotype-report generator (from the methodology package) to this
+	// example's hypertension bundle. The spec + template are resolved from
+	// deps/@oml/clinical-phenotype-project/oml/www.example.com/phenotype/codegen/phenotype-report.oml
+	extends <http://www.example.com/phenotype/codegen/phenotype-report#> as report
+
+	instance phenotypeReport : codegen:Config [
+		codegen:spec report:PhenotypeReportSpec
+		codegen:context "http://example.org/htn/description/bundle"
+		codegen:binding [ codegen:key "path" codegen:value "build/docs" ]
+	]
+}

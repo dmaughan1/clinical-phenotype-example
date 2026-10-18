@@ -1,0 +1,21 @@
+# oml-code settings
+oml-code:
+  schemaVersion: 1
+
+# project npm settings
+project:
+  name: "@oml/clinical-phenotype-example"
+  version: 0.1.0
+  title: Clinical Phenotype Example (Hypertension)
+  description: An independent example that installs and reuses the @oml/clinical-phenotype-project method.
+
+# this project has descriptions only; the vocabulary, editor templates and generator
+# come from the installed methodology package.
+sources: [ src ]
+
+# the published methodology, resolved from the local registry into deps/
+dependencies:
+  "@oml/clinical-phenotype-project": "0.2.0"
+
+defaults:
+  render: -m src/md -b build/web -c src/oml/example.org/htn/description/bundle.oml

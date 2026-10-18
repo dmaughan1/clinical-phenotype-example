@@ -1,0 +1,71 @@
+@dc:title "Patients, evaluations, evidence (hypertension example)"
+@dc:description "Synthetic patients evaluated against the criteria. All data is fabricated."
+description <http://example.org/htn/description/cohort#> as cohort {
+    uses <http://purl.org/dc/elements/1.1/> as dc
+    uses <http://www.w3.org/2000/01/rdf-schema#> as rdfs
+    uses <http://www.example.com/phenotype/vocabulary#> as phenotype
+    extends <http://example.org/htn/description/definition#> as definition
+
+    // --- patients (synthetic) ---
+
+    @rdfs:label "Patient H01"
+    @dc:description "Coded essential HTN; two systolic readings over 140."
+    instance PatientHtn01 : phenotype:Patient [
+        phenotype:id "PT-H01"
+    ]
+
+    @rdfs:label "Patient H02"
+    @dc:description "Coded secondary hypertension; excluded from the essential-HTN cohort."
+    instance PatientHtn02 : phenotype:Patient [
+        phenotype:id "PT-H02"
+    ]
+
+    // --- evaluations (patient x criterion) ---
+
+    @rdfs:label "H01 meets diagnosis criterion"
+    relation instance EvalH01Dx : phenotype:Evaluation [
+        from PatientHtn01
+        to definition:HtnDxCoded
+        phenotype:id "EVAL-H01-DX"
+        phenotype:membershipStatus "Included"
+    ]
+
+    @rdfs:label "H01 meets blood-pressure criterion"
+    relation instance EvalH01Bp : phenotype:Evaluation [
+        from PatientHtn01
+        to definition:ElevatedSystolic
+        phenotype:id "EVAL-H01-BP"
+        phenotype:membershipStatus "Included"
+    ]
+
+    @rdfs:label "H02 meets secondary-hypertension exclusion"
+    relation instance EvalH02Sec : phenotype:Evaluation [
+        from PatientHtn02
+        to definition:SecondaryHtnExcl
+        phenotype:id "EVAL-H02-SEC"
+        phenotype:membershipStatus "Excluded"
+    ]
+
+    // --- evidence ---
+
+    @rdfs:label "Coded diagnosis: essential hypertension"
+    @dc:description "Condition 59621000 recorded 2024-02-10."
+    instance EvidenceDxH01 : phenotype:Evidence [
+        phenotype:id "EV-DX-H01"
+        phenotype:supports EvalH01Dx
+    ]
+
+    @rdfs:label "Vitals: systolic 148 and 152 mmHg"
+    @dc:description "Observations 148 mmHg (2024-02-10) and 152 mmHg (2024-03-22)."
+    instance EvidenceBpH01 : phenotype:Evidence [
+        phenotype:id "EV-BP-H01"
+        phenotype:supports EvalH01Bp
+    ]
+
+    @rdfs:label "Coded diagnosis: secondary hypertension"
+    @dc:description "Condition 31992008 recorded 2023-12-05."
+    instance EvidenceSecH02 : phenotype:Evidence [
+        phenotype:id "EV-SEC-H02"
+        phenotype:supports EvalH02Sec
+    ]
+}
